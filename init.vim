@@ -2,12 +2,19 @@
 "Specify a directory for plugins"
 call plug#begin('~/.config/nvim/plugged')
 
+Plug 'morhetz/gruvbox'
+
 "Neovim theme"
 Plug 'joshdick/onedark.vim'
 "Lightline vim"
 Plug 'itchyny/lightline.vim'
 "Multiple language support"
 Plug 'sheerun/vim-polyglot'
+
+
+"Autocomplete"
+Plug 'jiangmiao/auto-pairs'
+Plug 'alvan/vim-closetag'
 "File Explorer"
 Plug 'scrooloose/nerdtree'
 Plug 'ryanoasis/vim-devicons'
@@ -20,9 +27,8 @@ Plug 'junegunn/fzf.vim'
 " Use release branch (recommend)
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-" Or build from source code by using yarn: https://yarnpkg.com
-Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
-
+"One half theme
+Plug 'sonph/onehalf', { 'rtp': 'vim' }
 
 
 "Initialize plugin system"
@@ -47,7 +53,10 @@ endif
 
 "onedark theme"
 syntax on
-colorscheme onedark
+colorscheme gruvbox
+set background=dark
+
+
 
 "Code for Show the File Tree"
 let g:NERDTreeShowHidden = 1
@@ -58,9 +67,9 @@ let g:NERDTreeStatusline = ''
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " Toggle
 nnoremap <silent> <C-b> :NERDTreeToggle<CR>
-
 set relativenumber
 set number
+set bg=dark
 "Integrated Terminal"
 "" open new split panes to right and below
 set splitright
@@ -94,3 +103,30 @@ let g:fzf_action = {
   \ 'ctrl-s': 'split',
   \ 'ctrl-v': 'vsplit'
   \}
+
+"Onehalf Theme"
+set clipboard=unnamed
+set t_Co=256
+set cursorline
+
+let g:airline_theme='onehalflight'
+" lightline
+" let g:lightline = { 'colorscheme': 'onehalfdark' }
+"
+if exists('+termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
+
+
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
